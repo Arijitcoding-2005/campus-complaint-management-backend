@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         // PUBLIC
-                        .requestMatchers("/auth/**", "/student", "/h2-console/**","/admin")
+                        .requestMatchers("/auth/**", "/student", "/h2-console/**","/admin","/swagger-ui/**","/v3/api-docs/**","/v3/api-docs.yaml","/swagger-ui.html")
                         .permitAll()
 
                         // STUDENT

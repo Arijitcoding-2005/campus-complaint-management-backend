@@ -19,7 +19,7 @@ public class ComplaintController {
 
     private final ComplaintService complaintService;
 
-    // 1️⃣ Create a new complaint
+    //  Create a new complaint
     @PostMapping
     @PreAuthorize("hasRole('STUDENT')")
 
@@ -32,7 +32,7 @@ public class ComplaintController {
         return ResponseEntity.ok(
                 complaintService.createComplaint(dto,studentEmail));
     }
-    // 2️⃣ Get complaints by student ID
+    // Get complaints by student ID
 //    @GetMapping
 //    public List<ComplaintResponseDTO> getComplaintsByStudent(@PathVariable Long studentId) {
 //        return complaintService.getComplaintsByStudent(studentId);
