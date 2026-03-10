@@ -6,8 +6,7 @@
 *.iml
 
 # Environment / Secrets
-.env
-**/application.properties
+
 
 # Logs
 *.log
