@@ -14,13 +14,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/complaints")
+@RequestMapping("/student")
 public class ComplaintController {
 
     private final ComplaintService complaintService;
 
     //  Create a new complaint
-    @PostMapping
+    @PostMapping("/complaints")
     @PreAuthorize("hasRole('STUDENT')")
 
     public ResponseEntity<ComplaintResponseDTO> createComplaint(
@@ -32,11 +32,7 @@ public class ComplaintController {
         return ResponseEntity.ok(
                 complaintService.createComplaint(dto,studentEmail));
     }
-    // Get complaints by student ID
-//    @GetMapping
-//    public List<ComplaintResponseDTO> getComplaintsByStudent(@PathVariable Long studentId) {
-//        return complaintService.getComplaintsByStudent(studentId);
-//    }
+
     // STUDENT: View own complaints
     @GetMapping("/my")
     @PreAuthorize("hasRole('STUDENT')")

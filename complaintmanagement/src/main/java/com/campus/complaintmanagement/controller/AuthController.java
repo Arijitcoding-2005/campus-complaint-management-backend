@@ -1,43 +1,36 @@
 package com.campus.complaintmanagement.controller;
 
 import com.campus.complaintmanagement.dto.LoginRequestDTO;
+import com.campus.complaintmanagement.dto.LoginResponseDTO;
+import com.campus.complaintmanagement.security.JwtUtil;
 import com.campus.complaintmanagement.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtUtil jwtUtil;
 
-    @PostMapping("/student/login")
-    public ResponseEntity<String> studentLogin(
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(
             @RequestBody LoginRequestDTO dto) {
 
-        String token = authService.loginStudent(
+        String token = authService.login(
                 dto.getEmail(),
                 dto.getPassword()
         );
 
-        return ResponseEntity.ok(token);
-    }
+        String role = jwtUtil.extractRole(token);
 
-    @PostMapping("/admin/login")
-    public ResponseEntity<String> adminLogin(
-            @RequestBody LoginRequestDTO dto) {
-
-        String token = authService.loginAdmin(
-                dto.getEmail(),
-                dto.getPassword()
+        return ResponseEntity.ok(
+                new LoginResponseDTO(token, role)
         );
-
-        return ResponseEntity.ok(token);
     }
 }
 

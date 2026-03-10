@@ -9,4 +9,5 @@ import lombok.Setter;
 public class ComplaintRequestDTO {
     private String title;
     private String description;
+    private String department;
 }

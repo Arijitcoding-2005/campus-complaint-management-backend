@@ -4,10 +4,11 @@ import com.campus.complaintmanagement.dto.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-public class GlobalHandlerException {
+
     @RestControllerAdvice
 
     public class GlobalExceptionHandler {
@@ -56,6 +57,27 @@ public class GlobalHandlerException {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiError> handleValidation(
+                MethodArgumentNotValidException ex,
+                HttpServletRequest request) {
+
+            String message = ex.getBindingResult()
+                    .getFieldErrors()
+                    .stream()
+                    .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Validation failed");
+
+            ApiError error = new ApiError(
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.name(),
+                    message,
+                    request.getRequestURI()
+            );
+
+            return ResponseEntity.badRequest().body(error);
+        }
     }
 
-}
+

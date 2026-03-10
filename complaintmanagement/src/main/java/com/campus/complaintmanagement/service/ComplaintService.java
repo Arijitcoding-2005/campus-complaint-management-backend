@@ -7,10 +7,17 @@ import java.util.List;
 
 public interface ComplaintService {
 
-    ComplaintResponseDTO createComplaint(ComplaintRequestDTO dto,String studentEmail);
+    ComplaintResponseDTO createComplaint(ComplaintRequestDTO dto, String studentEmail);
 
     List<ComplaintResponseDTO> getComplaintsByStudent(String email);
 
     ComplaintResponseDTO updateStatus(Long complaintId, Complaint.ComplaintStatus status);
-    List<ComplaintResponseDTO > getAllComplaints();
+
+    List<ComplaintResponseDTO> getAllComplaints();
+
+    List<ComplaintResponseDTO> getComplaintsByStudentId(Long studentId);
+
+    void softDeleteComplaint(Long id,Long studentId);
+
+    void editComplaint(Long id, Long studentId, ComplaintRequestDTO request);
 }

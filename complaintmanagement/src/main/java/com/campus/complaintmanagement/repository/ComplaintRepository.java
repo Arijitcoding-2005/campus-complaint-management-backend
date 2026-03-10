@@ -7,5 +7,9 @@ import java.util.List;
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     List<Complaint> findByStudent_Email(String studentEmail);
+    long countByStatus(Complaint.ComplaintStatus status);
+
+    List<Complaint> findByStudentIdAndIsDeletedFalse(Long studentId);
+    List<Complaint> findByIsDeletedFalse();
 
 }
