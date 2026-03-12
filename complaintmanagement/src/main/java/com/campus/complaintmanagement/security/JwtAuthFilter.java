@@ -28,17 +28,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println("JWT FILTER HIT → " + request.getRequestURI());
+        String uri = request.getRequestURI();
+
+        // ✅ Skip JWT check for public routes
+        if (uri.startsWith("/auth/") || uri.equals("/health")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        System.out.println("JWT FILTER HIT → " + uri);
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-
             try {
                 Claims claims = jwtUtil.extractClaims(token);
-
                 String email = claims.getSubject();
-                String role  = claims.get("role", String.class);
+                String role = claims.get("role", String.class);
 
                 List<GrantedAuthority> authorities =
                         List.of(new SimpleGrantedAuthority("ROLE_" + role));
@@ -49,7 +55,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
-                // Token is invalid, expired or signature mismatch
                 System.out.println("Invalid JWT: " + e.getMessage());
                 SecurityContextHolder.clearContext();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -57,11 +62,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 response.getWriter().write(
                         "{\"status\":401,\"message\":\"Invalid or expired token. Please login again.\"}"
                 );
-                return; // ← stop filter chain, don't proceed
+                return;
             }
         }
 
         filterChain.doFilter(request, response);
-        System.out.println("JWT FILTER DONE");
     }
 }
