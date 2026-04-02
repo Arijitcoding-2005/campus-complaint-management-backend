@@ -1,5 +1,6 @@
 package com.campus.complaintmanagement.controller;
 
+import com.campus.complaintmanagement.dto.AdminRegisterDTO;
 import com.campus.complaintmanagement.dto.ComplaintResponseDTO;
 import com.campus.complaintmanagement.dto.UpdateComplaintStatusDTO;
 import com.campus.complaintmanagement.entity.Admin;
@@ -37,10 +38,9 @@ public class AdminController {
         );
     }
     @PostMapping("/register")
-    public Admin createAdmin(@RequestBody Admin admin) {
-        return adminService.createadmin(admin);
+    public ResponseEntity<?> registerAdmin(@RequestBody AdminRegisterDTO dto) {
+        return ResponseEntity.ok(adminService.registerAdmin(dto));
     }
-
 
     // ADMIN: Update complaint status
     @PatchMapping("/complaints/{id}/status")
